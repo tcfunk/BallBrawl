@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
 
 public class Marble : MonoBehaviour
 {
@@ -16,7 +12,6 @@ public class Marble : MonoBehaviour
     private Camera cam;
     private Rigidbody rb;
     
-    // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -45,15 +40,14 @@ public class Marble : MonoBehaviour
         inputManager?.Disable();
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         if (moveInputDirection != Vector2.zero)
         {
             var cameraTransform = cam.transform;
             var right = new Vector3(cameraTransform.right.x, 0f, cameraTransform.right.z).normalized;
             var forward = new Vector3(cameraTransform.forward.x, 0f, cameraTransform.forward.z).normalized;
-            var inputForce = (right * moveInputDirection.x + forward * moveInputDirection.y) * inputForceStrength * Time.fixedDeltaTime;
+            var inputForce = (right * moveInputDirection.x + forward * moveInputDirection.y) * inputForceStrength * Time.deltaTime;
             
             rb.AddForce(inputForce, ForceMode.Force);
         }
