@@ -1,20 +1,24 @@
-using System;
 using UnityEngine;
 
 public class MarbleInner : MonoBehaviour
 {
-    [SerializeField] private Transform parent;
+    public Transform parent;
+    public Vector3 positionOffset;
 
-    private Vector3 positionOffset;
-
-    private void Start()
+    public void SetParent(Transform _parent)
     {
-        positionOffset = transform.localPosition;
-        transform.SetParent(null);
+        parent = _parent;
     }
 
     void LateUpdate()
     {
-        transform.position = parent.position + positionOffset;
+        if (parent)
+        {
+            transform.position = parent.position + positionOffset;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 }

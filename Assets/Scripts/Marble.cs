@@ -1,7 +1,9 @@
-using System;
+using Cinemachine;
+using Mirror;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
-public class Marble : MonoBehaviour
+public class Marble : NetworkBehaviour
 {
     [SerializeField]private float inputForceStrength;
     
@@ -12,13 +14,31 @@ public class Marble : MonoBehaviour
     private Camera cam;
     private Rigidbody rb;
     
+    [SerializeField]
+    private CinemachineVirtualCamera virtualCamera;
+
+    [SerializeField]
+    private GameObject innerPrefab;
+    
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         cam = Camera.main;
-        Debug.Log(cam.name);
-        Debug.Log(cam.transform.right);
-        Debug.Log(cam.transform.forward);
+        
+        var inst = Instantiate(innerPrefab, transform.position, Quaternion.identity, null);
+        var inner = inst.GetComponent<MarbleInner>();
+        if (inner)
+        {
+            inner.SetParent(transform);
+            virtualCamera.Follow = inst.transform;
+            virtualCamera.LookAt = inst.transform;
+        }
+    }
+
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+        virtualCamera.gameObject.SetActive(true);
     }
 
     private void Awake()
@@ -42,6 +62,8 @@ public class Marble : MonoBehaviour
 
     void Update()
     {
+        if (!isLocalPlayer) return;
+        
         if (moveInputDirection != Vector2.zero)
         {
             var cameraTransform = cam.transform;
