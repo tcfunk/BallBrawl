@@ -18,6 +18,13 @@ public class Marble : NetworkBehaviour
     private CinemachineVirtualCamera virtualCamera;
 
     [SerializeField]
+    private float maxCameraDutch = 5f;
+    [SerializeField]
+    private float cameraTiltSmoothTime = 0.5f;
+
+    private float cameraTiltVelocity = 0f;
+
+    [SerializeField]
     private GameObject innerPrefab;
     
     void Start()
@@ -73,5 +80,14 @@ public class Marble : NetworkBehaviour
             
             rb.AddForce(inputForce, ForceMode.Force);
         }
+        
+        DutchCamera();
+    }
+
+    void DutchCamera()
+    {
+        var right = moveInputDirection.x;
+        var currentDutch = virtualCamera.m_Lens.Dutch;
+        virtualCamera.m_Lens.Dutch = Mathf.SmoothDamp(currentDutch, right * maxCameraDutch, ref cameraTiltVelocity, cameraTiltSmoothTime);
     }
 }
