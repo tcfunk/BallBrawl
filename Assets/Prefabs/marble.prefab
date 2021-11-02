@@ -53,6 +53,8 @@ MonoBehaviour:
   syncInterval: 0.1
   inputForceStrength: 10000
   virtualCamera: {fileID: 837812378002295560}
+  maxCameraDutch: 10
+  cameraTiltSmoothTime: 0.5
   innerPrefab: {fileID: 416583179805072643, guid: d779f09a03dda8f4e9d81837efbe7682, type: 3}
 --- !u!114 &774875391
 MonoBehaviour:
